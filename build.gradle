@@ -1,0 +1,46 @@
+plugins {
+    // Apply the java plugin to add support for Java
+    id 'java'
+
+    // Apply the application plugin to add support for building an application
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
+}
+
+repositories {
+    // Use jcenter for resolving your dependencies.
+    // You can declare any Maven/Ivy/file repository here.
+    jcenter()
+}
+
+dependencies {
+    //testCompileOnly group: "org.seleniumhq.selenium.client-drivers", name: "selenium-java-client-driver", version: "1.0.2"
+    implementation 'org.apache.logging.log4j:log4j-core:2.13.3'
+    implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
+    implementation('io.github.bonigarcia:webdrivermanager:4.1.0')
+
+    implementation 'info.picocli:picocli:4.4.0'
+    annotationProcessor 'info.picocli:picocli-codegen:4.4.0'
+
+    // Use JUnit test framework
+    testImplementation 'junit:junit:4.12'
+}
+
+compileJava {
+    options.compilerArgs += ["-Aproject=${project.group}${project.name}"]
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'com.jemmic.usafe.cli.UsafeCLI',
+                // This Multi-Release entry is to avoid the error message:
+                // WARNING: sun.reflect.Reflection.getCallerClass is not supported. This will impact performance.
+                // The idea to do this was taken from https://stackoverflow.com/questions/53049346/is-log4j2-compatible-with-java-11
+                'Multi-Release': true
+        )
+    }
+}
+
+// Define the main class for the application
+mainClassName = 'xyz.danielgray.find_broken_links.App'
